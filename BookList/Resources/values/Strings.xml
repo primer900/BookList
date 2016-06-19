@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="hello">Hello World, Click Me!</string>
+	<string name="app_name">BookList</string>
+	<string name="add_page">Add Page</string>
+	<string name="add_page_greeting">Add title here</string>
+	<string name="AddPage">Add Book</string>
+	<string name="titleHint">Title</string>
+	<string name="FinishEdit">Done Editing</string>
+	<string name="Delete">Delete</string>
+</resources>
