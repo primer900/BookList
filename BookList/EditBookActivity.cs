@@ -37,8 +37,9 @@ namespace BookList
 			var finishButton = FindViewById<Button>(Resource.Id.Finish);
 			finishButton.Click += delegate 
 			{
-				if(title != null && title != initialTitle)
-					SaveTitle();
+				if (title != null && title != initialTitle)
+					AddBookUtility.EditTitleInPreferences(this, initialTitle, title);
+
 				Finish();
 			};
 		}

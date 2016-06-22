@@ -1,8 +1,8 @@
-﻿using System;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
 namespace BookList
 {
@@ -30,12 +30,11 @@ namespace BookList
 
 		public static void RemoveTitle(Activity activity, string titleToRemove)
 		{
-			var listOfTitles = new List<string>();
-			foreach (var title in GetListOfTitles(activity))
-				if (title != titleToRemove)
-					listOfTitles.Add(title);
+			var listOfTitles = GetListOfTitles(activity)
+				.Where(title => title != titleToRemove)
+				.ToList();
 
-			PutStringInPreferences(activity, keyForTitles, string.Join(",", listOfTitles));
+			PutStringInPreferences(activity, keyForTitles, string.Join(comma.ToString(), listOfTitles));
 		}
 
 		public static string[] GetListOfTitles(Activity activity)
@@ -45,6 +44,19 @@ namespace BookList
 				return ConvertStringToArray(listOfTitles);
 
 			return null;
+		}
+
+		public static void EditTitleInPreferences(Activity activity, string originalTitle, string replacementTitle)
+		{
+			var listOfTitles = GetStringFromPreferences(activity, keyForTitles, null);
+
+			var listOfTitlesArray = ConvertStringToArray(listOfTitles)
+				.Where(title => title != originalTitle)
+				.ToList();
+			
+			listOfTitlesArray.Add(replacementTitle);
+
+			PutStringInPreferences(activity, keyForTitles, string.Join(comma.ToString(), listOfTitlesArray));
 		}
 
 		private static void PutStringInPreferences(Activity activity, string key, string listOfTitles)
