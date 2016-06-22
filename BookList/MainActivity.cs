@@ -43,9 +43,9 @@ namespace BookList
 
 		private void EditBook(object sender, AdapterView.ItemClickEventArgs e)
 		{
-			var intent = new Intent(this, typeof(EditBookActivity));
+			var intent = new Intent(this, typeof(BookDetailActivity));
 			var titleOfItemClicked = listView.GetItemAtPosition(e.Position).ToString();
-			intent.PutExtra(AddBookUtility.titleOfItemClicked, titleOfItemClicked);
+			intent.PutExtra(BookUtility.titleOfItemClicked, titleOfItemClicked);
 
 			StartActivityForResult(intent, _editBookActivityResult);
 		}
@@ -63,7 +63,7 @@ namespace BookList
 
 		private void UpdateData()
 		{
-			titlesToBeAdded = AddBookUtility.GetListOfTitles(this);
+			titlesToBeAdded = BookUtility.GetListOfTitles(this);
 
 			adapter.Clear();
 			if (titlesToBeAdded != null)

@@ -38,6 +38,6 @@ namespace BookList
 			};
 		}
 
-		private void SaveTitle() => AddBookUtility.SaveTitleToPreferences(this, title);
+		private void SaveTitle() => BookUtility.SaveTitleToPreferences(this, title);
 	}
 }

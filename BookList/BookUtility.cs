@@ -6,7 +6,7 @@ using System;
 
 namespace BookList
 {
-	public static class AddBookUtility
+	public static class BookUtility
 	{
 
 		private const string preferences_file = "StorageFile";

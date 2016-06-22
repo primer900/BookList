@@ -5,8 +5,8 @@ using Android.Widget;
 
 namespace BookList
 {
-	[Activity(Label = "Edit Book")]
-	public class EditBookActivity : Activity
+	[Activity(Label = "Details")]
+	public class BookDetailActivity : Activity
 	{
 		private string title;
 		private string initialTitle;
@@ -17,7 +17,7 @@ namespace BookList
 
 			SetContentView(Resource.Layout.EditBook);
 
-			title = Intent.GetStringExtra(AddBookUtility.titleOfItemClicked);
+			title = Intent.GetStringExtra(BookUtility.titleOfItemClicked);
 			initialTitle = title;
 
 			InitliazeEditTitleEditText();
@@ -38,7 +38,7 @@ namespace BookList
 			finishButton.Click += delegate 
 			{
 				if (title != null && title != initialTitle)
-					AddBookUtility.EditTitleInPreferences(this, initialTitle, title);
+					BookUtility.EditTitleInPreferences(this, initialTitle, title);
 
 				Finish();
 			};
@@ -51,11 +51,11 @@ namespace BookList
 			{
 				var editText = FindViewById<EditText>(Resource.Id.EditTitle);
 				editText.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) => title = e.Text.ToString();
-				AddBookUtility.RemoveTitle(this, title);
+				BookUtility.RemoveTitle(this, title);
 				Finish();
 			};
 		}
 
-		private void SaveTitle() => AddBookUtility.SaveTitleToPreferences(this, title);
+		private void SaveTitle() => BookUtility.SaveTitleToPreferences(this, title);
 	}
 }
