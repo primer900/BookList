@@ -15,7 +15,7 @@ namespace BookList
 		{
 			base.OnCreate(savedInstanceState);
 
-			SetContentView(Resource.Layout.EditBook);
+			SetContentView(Resource.Layout.BookDetail);
 
 			title = Intent.GetStringExtra(BookUtility.titleOfItemClicked);
 			initialTitle = title;
@@ -23,6 +23,9 @@ namespace BookList
 			InitliazeEditTitleEditText();
 			InitializeDoneEditingButton();
 			InitliazeDeleteButton();
+
+			var image = FindViewById<ImageView>(Resource.Id.demoImageView);
+			image.SetImageResource(Resource.Drawable.icon);
 		}
 
 		private void InitliazeEditTitleEditText()

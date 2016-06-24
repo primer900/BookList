@@ -7,6 +7,11 @@
         android:id="@+id/EditTitle"
         android:layout_width="match_parent"
         android:layout_height="50dp" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/demoImageView"
+        android:src="@drawable/icon" />
     <Button
         android:id="@id/Finish"
         android:layout_width="match_parent"
