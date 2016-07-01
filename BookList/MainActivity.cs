@@ -70,6 +70,9 @@ namespace BookList
 				titlesToBeAdded
 					.ToList()
 					.ForEach(title => adapter.Insert(title, _topOfList));
+
+			var totalPagesTextView = FindViewById<TextView>(Resource.Id.totalPages);
+			totalPagesTextView.Text = BookUtility._totalPagesReadForMainActivity.ToString();
 		}
 	}
 }

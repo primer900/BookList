@@ -17,6 +17,6 @@
         android:id="@+id/totalPages"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="total pages"
+        android:text="0"
         android:layout_weight="0" />
 </LinearLayout>

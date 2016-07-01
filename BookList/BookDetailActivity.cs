@@ -21,12 +21,12 @@ namespace BookList
 
 			_title = Intent.GetStringExtra(BookUtility.titleOfItemClicked);
 			_initialTitle = _title;
+			_numberOfPages = BookUtility.GetPageNumberFromPreferences(this, _title, 0);
 
 			InitializeEditTitleEditText();
 			InitializeNumberOfPagesEditText();
 			InitializeDoneEditingButton();
 			InitializeDeleteButton();
-
 		}
 
 		private void InitializeEditTitleEditText()
@@ -39,15 +39,18 @@ namespace BookList
 		private void InitializeNumberOfPagesEditText()
 		{
 			var numberOfPagesEditText = FindViewById<EditText>(Resource.Id.NumberOfPages);
+			if(_numberOfPages != 0)
+				numberOfPagesEditText.Text = _numberOfPages.ToString();
+			
 			numberOfPagesEditText.TextChanged +=
-				(object sender, Android.Text.TextChangedEventArgs e) => 
+			(object sender, Android.Text.TextChangedEventArgs e) =>
 			{
-				var numberOfPagesString = e.Text.ToString();
-				_numberOfPages = GetNumberOfPages(numberOfPagesString);
+				_numberOfPages = ConvertStringToInt(e.Text.ToString());
+				BookUtility.SaveNumberOfPagesToPreferences(this, _title, _numberOfPages);
 			};
 		}
 
-		private int GetNumberOfPages(string enteredPageCount)
+		private int ConvertStringToInt(string enteredPageCount)
 		{
 			try
 			{
@@ -68,7 +71,6 @@ namespace BookList
 			{
 				if (_title != null && _title != _initialTitle)
 					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
-				
 
 				Finish();
 			};
