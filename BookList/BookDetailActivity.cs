@@ -2,14 +2,16 @@
 using Android.Content;
 using Android.OS;
 using Android.Widget;
+using System;
 
 namespace BookList
 {
 	[Activity(Label = "Details")]
 	public class BookDetailActivity : Activity
 	{
-		private string title;
-		private string initialTitle;
+		private string _title;
+		private string _initialTitle;
+		private int _numberOfPages;
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -17,22 +19,46 @@ namespace BookList
 
 			SetContentView(Resource.Layout.BookDetail);
 
-			title = Intent.GetStringExtra(BookUtility.titleOfItemClicked);
-			initialTitle = title;
+			_title = Intent.GetStringExtra(BookUtility.titleOfItemClicked);
+			_initialTitle = _title;
 
-			InitliazeEditTitleEditText();
+			InitializeEditTitleEditText();
+			InitializeNumberOfPagesEditText();
 			InitializeDoneEditingButton();
-			InitliazeDeleteButton();
+			InitializeDeleteButton();
 
-			var image = FindViewById<ImageView>(Resource.Id.demoImageView);
-			image.SetImageResource(Resource.Drawable.icon);
 		}
 
-		private void InitliazeEditTitleEditText()
+		private void InitializeEditTitleEditText()
 		{
 			var editText = FindViewById<EditText>(Resource.Id.EditTitle);
-			editText.Text = title;
-			editText.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) => title = e.Text.ToString();
+			editText.Text = _title;
+			editText.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) => _title = e.Text.ToString();
+		}
+
+		private void InitializeNumberOfPagesEditText()
+		{
+			var numberOfPagesEditText = FindViewById<EditText>(Resource.Id.NumberOfPages);
+			numberOfPagesEditText.TextChanged +=
+				(object sender, Android.Text.TextChangedEventArgs e) => 
+			{
+				var numberOfPagesString = e.Text.ToString();
+				_numberOfPages = GetNumberOfPages(numberOfPagesString);
+			};
+		}
+
+		private int GetNumberOfPages(string enteredPageCount)
+		{
+			try
+			{
+				int numberOfPages;
+				Int32.TryParse(enteredPageCount, out numberOfPages);
+				return numberOfPages;
+			}
+			catch (FormatException e)
+			{
+				throw new FormatException(e.Message);
+			}
 		}
 
 		private void InitializeDoneEditingButton()
@@ -40,25 +66,26 @@ namespace BookList
 			var finishButton = FindViewById<Button>(Resource.Id.Finish);
 			finishButton.Click += delegate 
 			{
-				if (title != null && title != initialTitle)
-					BookUtility.EditTitleInPreferences(this, initialTitle, title);
+				if (_title != null && _title != _initialTitle)
+					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
+				
 
 				Finish();
 			};
 		}
 
-		private void InitliazeDeleteButton()
+		private void InitializeDeleteButton()
 		{
 			var deleteButton = FindViewById<Button>(Resource.Id.Delete);
 			deleteButton.Click += delegate 
 			{
 				var editText = FindViewById<EditText>(Resource.Id.EditTitle);
-				editText.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) => title = e.Text.ToString();
-				BookUtility.RemoveTitle(this, title);
+				editText.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) => _title = e.Text.ToString();
+				BookUtility.RemoveTitle(this, _title);
 				Finish();
 			};
 		}
 
-		private void SaveTitle() => BookUtility.SaveTitleToPreferences(this, title);
+		private void SaveTitle() => BookUtility.SaveTitleToPreferences(this, _title);
 	}
 }

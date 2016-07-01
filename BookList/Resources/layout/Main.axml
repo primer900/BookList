@@ -11,5 +11,12 @@
     <ListView
         android:id="@+id/bookList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+    <TextView
+        android:id="@+id/totalPages"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="total pages"
+        android:layout_weight="0" />
 </LinearLayout>
