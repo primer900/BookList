@@ -91,7 +91,7 @@ namespace BookList
 			var newTotalPagesRead = oldTotalPagesRead + pagesToAddOrRemove;
 			BookUtility.PutNumberOfPagesInPreferences(this, TOTAL_PAGES_MAIN, newTotalPagesRead);
 
-			totalPagesTextView.Text = BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0).ToString();
+			totalPagesTextView.Text = "You have read " + BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0) + " pages";
 			_numberOfPagesToAdd = 0;
 			_numberOfPagesToRemove = 0;
 		}
