@@ -12,8 +12,6 @@ namespace BookList
 		private const string preferences_file = "StorageFile";
 		private const string keyForTitles = "title";
 		private const string keyForTotalPages = "TotalPages";
-		private static int _totalPagesRead;
-		public static int _totalPagesReadForMainActivity { get; set; }
 		private const int PRIVATE_MODE = 0;
 		private const char comma = ',';
 
@@ -29,16 +27,6 @@ namespace BookList
 				listOfTitles = title;
 
 			PutStringInPreferences(activity, keyForTitles, listOfTitles);
-		}
-
-		public static void SaveNumberOfPagesToPreferences(Activity activity, string title, int pages)
-		{
-			PutNumberOfPagesInPreferences(activity, title, pages);
-			_totalPagesRead += pages;
-
-			PutNumberOfPagesInPreferences(activity, keyForTotalPages, _totalPagesRead);
-
-			_totalPagesReadForMainActivity = GetPageNumberFromPreferences(activity, keyForTotalPages, 0);
 		}
 
 		public static void RemoveTitle(Activity activity, string titleToRemove)
@@ -96,7 +84,7 @@ namespace BookList
 
 		private static string[] ConvertStringToArray(string listOfTitles) => listOfTitles.Split(comma);
 
-		private static void PutNumberOfPagesInPreferences(Activity activity, string key, int number)
+		public static void PutNumberOfPagesInPreferences(Activity activity, string key, int number)
 		{
 			var preferences = activity.GetSharedPreferences(preferences_file, PRIVATE_MODE);
 			var editor = preferences.Edit();

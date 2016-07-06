@@ -34,6 +34,7 @@ namespace BookList
 			{
 				if(title != null)
 					SaveTitle();
+
 				Finish();
 			};
 		}

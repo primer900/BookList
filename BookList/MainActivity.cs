@@ -10,9 +10,12 @@ namespace BookList
 	[Activity(Label = "BookList", MainLauncher = true, Icon = "@mipmap/book_icon")]
 	public class MainActivity : Activity
 	{
-		private const int _topOfList = 0;
-		private const int _addBookActivityResult = 1;
-		private const int _editBookActivityResult = 2;
+		private const int TOP_OF_LIST = 0;
+		private const int ADD_BOOK_ACTIVITY_RESULT = 1;
+		private const int EDIT_BOOK_ACTIVITY_RESULT = 2;
+		private const string TOTAL_PAGES_MAIN = "totalPages";
+		private int _numberOfPagesToAdd;
+		private int _numberOfPagesToRemove;
 
 		private ListView listView;
 		private ArrayAdapter<string> adapter;
@@ -22,6 +25,11 @@ namespace BookList
 		{
 			base.OnActivityResult(requestCode, resultCode, data);
 
+			if (requestCode == EDIT_BOOK_ACTIVITY_RESULT && resultCode == Result.Ok)
+			{
+				_numberOfPagesToAdd = data.GetIntExtra("numberOfPagesToAdd", 0);
+				_numberOfPagesToRemove = data.GetIntExtra("numberOfPagesToRemove", 0);
+			}
 			UpdateData();
 		}
 
@@ -47,7 +55,7 @@ namespace BookList
 			var titleOfItemClicked = listView.GetItemAtPosition(e.Position).ToString();
 			intent.PutExtra(BookUtility.titleOfItemClicked, titleOfItemClicked);
 
-			StartActivityForResult(intent, _editBookActivityResult);
+			StartActivityForResult(intent, EDIT_BOOK_ACTIVITY_RESULT);
 		}
 
 		private void InitializeAddBookButton()
@@ -57,7 +65,7 @@ namespace BookList
 			addBook.Click += delegate
 			{
 				var intent = new Intent(this, typeof(AddBookActivity));
-				StartActivityForResult(intent, _addBookActivityResult);
+				StartActivityForResult(intent, ADD_BOOK_ACTIVITY_RESULT);
 			};
 		}
 
@@ -69,10 +77,22 @@ namespace BookList
 			if (titlesToBeAdded != null)
 				titlesToBeAdded
 					.ToList()
-					.ForEach(title => adapter.Insert(title, _topOfList));
+					.ForEach(title => adapter.Insert(title, TOP_OF_LIST));
 
+			UpdateTotalPagesRead();
+		}
+
+		private void UpdateTotalPagesRead()
+		{
 			var totalPagesTextView = FindViewById<TextView>(Resource.Id.totalPages);
-			totalPagesTextView.Text = BookUtility._totalPagesReadForMainActivity.ToString();
+			var oldTotalPagesRead = BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0);
+
+			var pagesToAddOrRemove = _numberOfPagesToAdd - _numberOfPagesToRemove;
+			var newTotalPagesRead = oldTotalPagesRead + pagesToAddOrRemove;
+			BookUtility.PutNumberOfPagesInPreferences(this, TOTAL_PAGES_MAIN, newTotalPagesRead);
+
+			totalPagesTextView.Text = BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0).ToString();
+			_numberOfPagesToAdd = 0;
 		}
 	}
 }
