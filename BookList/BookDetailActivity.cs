@@ -98,6 +98,17 @@ namespace BookList
 				var editText = FindViewById<EditText>(Resource.Id.EditTitle);
 				editText.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) => _title = e.Text.ToString();
 				BookUtility.RemoveTitle(this, _title);
+
+				//To set the pages back to 0 when the title is removed.
+				BookUtility.PutNumberOfPagesInPreferences(this, _title, 0);
+
+				var intent = new Intent();
+				intent.PutExtra("numberOfPagesToAdd", 0);
+				if (_initialNumberOfPages != _numberOfPages)
+					intent.PutExtra("numberOfPagesToRemove", _numberOfPages);
+				else
+					intent.PutExtra("numberOfPagesToRemove", _initialNumberOfPages);
+				SetResult(Result.Ok, intent);
 				Finish();
 			};
 		}

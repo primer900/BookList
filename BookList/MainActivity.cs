@@ -93,6 +93,7 @@ namespace BookList
 
 			totalPagesTextView.Text = BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0).ToString();
 			_numberOfPagesToAdd = 0;
+			_numberOfPagesToRemove = 0;
 		}
 	}
 }

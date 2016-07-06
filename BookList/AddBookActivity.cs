@@ -8,7 +8,7 @@ namespace BookList
 	public class AddBookActivity : Activity
 	{
 		private const int PRIVATE_MODE = 0;
-		private string title;
+		private string _title;
 		
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -16,14 +16,14 @@ namespace BookList
 
 			SetContentView(Resource.Layout.AddBook);
 
-			InitliazeAddTitleEditText();
+			InitializeAddTitleEditText();
 			InitializeFinishButton();
 		}
 
-		private void InitliazeAddTitleEditText()
+		private void InitializeAddTitleEditText()
 		{
 			var editText = FindViewById<EditText>(Resource.Id.AddTitle);
-			editText.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) => title = e.Text.ToString();
+			editText.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) => _title = e.Text.ToString();
 		}
 
 		private void InitializeFinishButton()
@@ -32,13 +32,13 @@ namespace BookList
 
 			finishButton.Click += delegate
 			{
-				if(title != null)
+				if(_title != null)
 					SaveTitle();
 
 				Finish();
 			};
 		}
 
-		private void SaveTitle() => BookUtility.SaveTitleToPreferences(this, title);
+		private void SaveTitle() => BookUtility.SaveTitleToPreferences(this, _title);
 	}
 }
