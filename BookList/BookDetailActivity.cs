@@ -121,10 +121,8 @@ namespace BookList
 
 				var intent = new Intent();
 				intent.PutExtra("numberOfPagesToAdd", 0);
-				if (_initialNumberOfPages != _numberOfPages)
-					intent.PutExtra("numberOfPagesToRemove", _numberOfPages);
-				else
-					intent.PutExtra("numberOfPagesToRemove", _initialNumberOfPages);
+				intent.PutExtra("numberOfPagesToRemove", _initialNumberOfPages);
+
 				SetResult(Result.Ok, intent);
 				Finish();
 			};
