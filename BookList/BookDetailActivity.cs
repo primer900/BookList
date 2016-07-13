@@ -74,17 +74,33 @@ namespace BookList
 			var doneEditingButton = FindViewById<Button>(Resource.Id.Finish);
 			doneEditingButton.Click += delegate 
 			{
-				if (_title != null && _title != _initialTitle)
-					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
-
 				var intent = new Intent();
-				if (_initialNumberOfPages != _numberOfPages)
+				if (_title != null)
 				{
-					intent.PutExtra("numberOfPagesToAdd", _numberOfPages);
-					intent.PutExtra("numberOfPagesToRemove", _initialNumberOfPages);
+					if (_title == _initialTitle && _numberOfPages == _initialNumberOfPages)
+						intent.PutExtra("numberOfPagesToAdd", 0);
+
+					if (_title == _initialTitle && _initialNumberOfPages != _numberOfPages)
+					{
+						intent.PutExtra("numberOfPagesToAdd", _numberOfPages);
+						intent.PutExtra("numberOfPagesToRemove", _initialNumberOfPages);
+					}
+
+					if (_title != _initialTitle && _numberOfPages == _initialNumberOfPages)
+					{
+						BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
+						BookUtility.PutNumberOfPagesInPreferences(this, _title, _initialNumberOfPages);
+					}
+
+					else if (_title != _initialTitle && _numberOfPages != _initialNumberOfPages)
+					{
+						BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
+						BookUtility.PutNumberOfPagesInPreferences(this, _title, _numberOfPages);
+						intent.PutExtra("numberOfPagesToAdd", _numberOfPages);
+						intent.PutExtra("numberOfPagesToRemove", _initialNumberOfPages);
+					}
 				}
-				else
-					intent.PutExtra("numberOfPagesToAdd", 0);
+
 				SetResult(Result.Ok, intent);
 				Finish();
 			};
@@ -101,6 +117,7 @@ namespace BookList
 
 				//To set the pages back to 0 when the title is removed.
 				BookUtility.PutNumberOfPagesInPreferences(this, _title, 0);
+				BookUtility.PutNumberOfPagesInPreferences(this, _initialTitle, 0);
 
 				var intent = new Intent();
 				intent.PutExtra("numberOfPagesToAdd", 0);
