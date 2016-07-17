@@ -11,8 +11,13 @@
         android:id="@+id/NumberOfPages"
         android:layout_width="match_parent"
         android:inputType="number"
-        android:hint="Enter a number"
+        android:hint="How many pages did you read?"
         android:layout_height="50dp" />
+    <CheckBox
+        android:id="@+id/AudioBookCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Audio Book?" />
     <Button
         android:id="@id/Finish"
         android:layout_width="match_parent"

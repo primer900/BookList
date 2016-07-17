@@ -1,8 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
-using System.Collections.Generic;
 using System.Linq;
-using System;
+
 
 namespace BookList
 {
@@ -90,6 +89,21 @@ namespace BookList
 			var editor = preferences.Edit();
 			editor.PutInt(key, number);
 			editor.Commit();
+		}
+
+		public static void PutBoolInPreferences(Activity activity, string key, bool value)
+		{
+			var preferences = activity.GetSharedPreferences(preferences_file, PRIVATE_MODE);
+			var editor = preferences.Edit();
+			editor.PutBoolean(key, value);
+			editor.Commit();
+		}
+
+		public static bool GetBoolInPreferences(Activity activity, string key, bool defaultValue)
+		{
+			var preferences = activity.GetSharedPreferences(preferences_file, PRIVATE_MODE);
+			var isAudioBook = preferences.GetBoolean(key, defaultValue);
+			return isAudioBook;
 		}
 	}
 }
