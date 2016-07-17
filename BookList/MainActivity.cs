@@ -14,8 +14,7 @@ namespace BookList
 		private const int ADD_BOOK_ACTIVITY_RESULT = 1;
 		private const int EDIT_BOOK_ACTIVITY_RESULT = 2;
 		private const string TOTAL_PAGES_MAIN = "totalPages";
-		private int _numberOfPagesToAdd;
-		private int _numberOfPagesToRemove;
+		private int _numberOfPagesToAddOrRemove;
 
 		private ListView listView;
 		private ArrayAdapter<string> adapter;
@@ -26,10 +25,8 @@ namespace BookList
 			base.OnActivityResult(requestCode, resultCode, data);
 
 			if (requestCode == EDIT_BOOK_ACTIVITY_RESULT && resultCode == Result.Ok)
-			{
-				_numberOfPagesToAdd = data.GetIntExtra("numberOfPagesToAdd", 0);
-				_numberOfPagesToRemove = data.GetIntExtra("numberOfPagesToRemove", 0);
-			}
+				_numberOfPagesToAddOrRemove = data.GetIntExtra("numberOfPagesToAddOrRemove", 0);
+
 			UpdateData();
 		}
 
@@ -87,13 +84,11 @@ namespace BookList
 			var totalPagesTextView = FindViewById<TextView>(Resource.Id.totalPages);
 			var oldTotalPagesRead = BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0);
 
-			var pagesToAddOrRemove = _numberOfPagesToAdd - _numberOfPagesToRemove;
-			var newTotalPagesRead = oldTotalPagesRead + pagesToAddOrRemove;
+			var newTotalPagesRead = oldTotalPagesRead + _numberOfPagesToAddOrRemove;
 			BookUtility.PutNumberOfPagesInPreferences(this, TOTAL_PAGES_MAIN, newTotalPagesRead);
 
 			totalPagesTextView.Text = "You have read " + BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0) + " pages";
-			_numberOfPagesToAdd = 0;
-			_numberOfPagesToRemove = 0;
+			_numberOfPagesToAddOrRemove = 0;
 		}
 	}
 }

@@ -14,8 +14,7 @@ namespace BookList
 		private int _initialNumberOfPages;
 		private int _numberOfPages;
 		private const int EDIT_BOOK_ACTIVITY_RESULT = 2;
-		private const string NUMBER_OF_PAGES_TO_ADD = "numberOfPagesToAdd";
-		private const string NUMBER_OF_PAGES_TO_REMOVE = "numberOfPagesToRemove";
+		private const string NUMBER_OF_PAGES_TO_ADD_OR_REMOVE = "numberOfPagesToAddOrRemove";
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -91,12 +90,11 @@ namespace BookList
 			if (_title != null)
 			{
 				if (!TitleChange() && _numberOfPages == _initialNumberOfPages)
-					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD, 0);
+					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, 0);
 
 				if (!TitleChange() && _initialNumberOfPages != _numberOfPages)
 				{
-					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD, _numberOfPages);
-					intent.PutExtra(NUMBER_OF_PAGES_TO_REMOVE, _initialNumberOfPages);
+					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, _numberOfPages - _initialNumberOfPages);
 				}
 
 				if (TitleChange() && _numberOfPages == _initialNumberOfPages)
@@ -111,14 +109,12 @@ namespace BookList
 					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
 					BookUtility.PutNumberOfPagesInPreferences(this, _title, _numberOfPages);
 					BookUtility.PutBoolInPreferences(this, _title + "Bool", audioBookCheckBox.Checked);
-					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD, _numberOfPages);
-					intent.PutExtra(NUMBER_OF_PAGES_TO_REMOVE, _initialNumberOfPages);
+					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, _numberOfPages - _initialNumberOfPages);
 				}
 
 				if (audioBookCheckBox.Checked)
 				{
-					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD, 0);
-					intent.PutExtra(NUMBER_OF_PAGES_TO_REMOVE, 0);
+					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, 0);
 				}
 			}
 
@@ -143,14 +139,13 @@ namespace BookList
 			BookUtility.PutNumberOfPagesInPreferences(this, _initialTitle, 0);
 
 			var intent = new Intent();
-			intent.PutExtra(NUMBER_OF_PAGES_TO_ADD, 0);
 
 			var audioBookCheckBox = FindViewById<CheckBox>(Resource.Id.AudioBookCheckBox);
 
 			if (!audioBookCheckBox.Checked)
-				intent.PutExtra(NUMBER_OF_PAGES_TO_REMOVE, _initialNumberOfPages);
+				intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, 0 - _initialNumberOfPages);
 			else
-				intent.PutExtra(NUMBER_OF_PAGES_TO_REMOVE, 0);
+				intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, 0);
 
 			SetResult(Result.Ok, intent);
 			Finish();
