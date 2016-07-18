@@ -17,7 +17,15 @@
         android:id="@+id/totalPages"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="0"
+        android:text="You have read 0 pages"
+        android:layout_weight="0"
+        android:textSize="20sp"
+        android:gravity="right" />
+    <TextView
+        android:id="@+id/totalHours"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="You have listened for 0 hours"
         android:layout_weight="0"
         android:textSize="20sp"
         android:gravity="right" />

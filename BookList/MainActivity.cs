@@ -14,7 +14,9 @@ namespace BookList
 		private const int ADD_BOOK_ACTIVITY_RESULT = 1;
 		private const int EDIT_BOOK_ACTIVITY_RESULT = 2;
 		private const string TOTAL_PAGES_MAIN = "totalPages";
-		private int _numberOfPagesToAddOrRemove;
+		private const string TOTAL_HOURS_MAIN = "totalHours";
+		private int _contentToAddOrRemove;
+		private bool _isAudioBook;
 
 		private ListView listView;
 		private ArrayAdapter<string> adapter;
@@ -25,7 +27,10 @@ namespace BookList
 			base.OnActivityResult(requestCode, resultCode, data);
 
 			if (requestCode == EDIT_BOOK_ACTIVITY_RESULT && resultCode == Result.Ok)
-				_numberOfPagesToAddOrRemove = data.GetIntExtra("numberOfPagesToAddOrRemove", 0);
+			{
+				_contentToAddOrRemove = data.GetIntExtra("numberOfPagesToAddOrRemove", 0);
+				_isAudioBook = data.GetBooleanExtra("bookIsAudio", false);
+			}
 
 			UpdateData();
 		}
@@ -76,7 +81,10 @@ namespace BookList
 					.ToList()
 					.ForEach(title => adapter.Insert(title, TOP_OF_LIST));
 
-			UpdateTotalPagesRead();
+			if(!_isAudioBook)
+				UpdateTotalPagesRead();
+			else
+				UpdateTotalHoursListenedTo();
 		}
 
 		private void UpdateTotalPagesRead()
@@ -84,11 +92,23 @@ namespace BookList
 			var totalPagesTextView = FindViewById<TextView>(Resource.Id.totalPages);
 			var oldTotalPagesRead = BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0);
 
-			var newTotalPagesRead = oldTotalPagesRead + _numberOfPagesToAddOrRemove;
-			BookUtility.PutNumberOfPagesInPreferences(this, TOTAL_PAGES_MAIN, newTotalPagesRead);
+			var newTotalPagesRead = oldTotalPagesRead + _contentToAddOrRemove;
+			BookUtility.PutContentOfBook(this, TOTAL_PAGES_MAIN, newTotalPagesRead);
 
 			totalPagesTextView.Text = "You have read " + BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0) + " pages";
-			_numberOfPagesToAddOrRemove = 0;
+			_contentToAddOrRemove = 0;
+		}
+
+		private void UpdateTotalHoursListenedTo()
+		{
+			var totalHoursTextView = FindViewById<TextView>(Resource.Id.totalHours);
+			var oldTotalHoursListened = BookUtility.GetPageNumberFromPreferences(this, TOTAL_HOURS_MAIN, 0);
+
+			var newTotalHoursListened = oldTotalHoursListened + _contentToAddOrRemove;
+			BookUtility.PutContentOfBook(this, TOTAL_HOURS_MAIN, newTotalHoursListened);
+
+			totalHoursTextView.Text = "You have listened for " + BookUtility.GetPageNumberFromPreferences(this, TOTAL_HOURS_MAIN, 0) + " hours";
+			_contentToAddOrRemove = 0;
 		}
 	}
 }

@@ -11,10 +11,11 @@ namespace BookList
 	{
 		private string _title;
 		private string _initialTitle;
-		private int _initialNumberOfPages;
-		private int _numberOfPages;
+		private int _initialAmountOfContent;
+		private int _amountOfContent;
 		private const int EDIT_BOOK_ACTIVITY_RESULT = 2;
-		private const string NUMBER_OF_PAGES_TO_ADD_OR_REMOVE = "numberOfPagesToAddOrRemove";
+		private const string CONTENT_TO_ADD_OR_REMOVE = "numberOfPagesToAddOrRemove";
+		private const string BOOK_IS_AUDIO = "bookIsAudio";
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -24,8 +25,8 @@ namespace BookList
 
 			_title = Intent.GetStringExtra(BookUtility.titleOfItemClicked);
 			_initialTitle = _title;
-			_numberOfPages = BookUtility.GetPageNumberFromPreferences(this, _title, 0);
-			_initialNumberOfPages = _numberOfPages;
+			_amountOfContent = BookUtility.GetPageNumberFromPreferences(this, _title, 0);
+			_initialAmountOfContent = _amountOfContent;
 
 			var isAudioBook = BookUtility.GetBoolInPreferences(this, _initialTitle + "Bool", false);
 			FindViewById<CheckBox>(Resource.Id.AudioBookCheckBox).Checked = isAudioBook;
@@ -51,15 +52,15 @@ namespace BookList
 			if (FindViewById<CheckBox>(Resource.Id.AudioBookCheckBox).Checked)
 				numberOfPagesEditText.Hint = "How many hours did you listen?";
 
-			if (_numberOfPages != 0)
-				numberOfPagesEditText.Text = _numberOfPages.ToString();
+			if (_amountOfContent != 0)
+				numberOfPagesEditText.Text = _amountOfContent.ToString();
 
 			numberOfPagesEditText.TextChanged +=
 			(object sender, Android.Text.TextChangedEventArgs e) =>
 			{
-				_numberOfPages = ConvertStringToInt(e.Text.ToString());
-				if(_numberOfPages != _initialNumberOfPages)
-					BookUtility.PutNumberOfPagesInPreferences(this, _title, _numberOfPages);
+				_amountOfContent = ConvertStringToInt(e.Text.ToString());
+				if(_amountOfContent != _initialAmountOfContent)
+					BookUtility.PutContentOfBook(this, _title, _amountOfContent);
 			};
 		}
 
@@ -89,33 +90,34 @@ namespace BookList
 
 			if (_title != null)
 			{
-				if (!TitleChange() && _numberOfPages == _initialNumberOfPages)
-					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, 0);
-
-				if (!TitleChange() && _initialNumberOfPages != _numberOfPages)
+				if (!TitleChange() && _amountOfContent == _initialAmountOfContent)
 				{
-					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, _numberOfPages - _initialNumberOfPages);
+					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, 0);
+					BookUtility.PutBoolInPreferences(this, _initialTitle + "Bool", audioBookCheckBox.Checked);
 				}
 
-				if (TitleChange() && _numberOfPages == _initialNumberOfPages)
+				if (!TitleChange() && _initialAmountOfContent != _amountOfContent)
+				{
+					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, _amountOfContent - _initialAmountOfContent);
+					BookUtility.PutBoolInPreferences(this, _initialTitle + "Bool", audioBookCheckBox.Checked);
+				}
+
+				if (TitleChange() && _amountOfContent == _initialAmountOfContent)
 				{
 					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
-					BookUtility.PutNumberOfPagesInPreferences(this, _title, _initialNumberOfPages);
+					BookUtility.PutContentOfBook(this, _title, _initialAmountOfContent);
 					BookUtility.PutBoolInPreferences(this, _title + "Bool", audioBookCheckBox.Checked);
 				}
 
-				if (TitleChange() && _numberOfPages != _initialNumberOfPages)
+				if (TitleChange() && _amountOfContent != _initialAmountOfContent)
 				{
 					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
-					BookUtility.PutNumberOfPagesInPreferences(this, _title, _numberOfPages);
+					BookUtility.PutContentOfBook(this, _title, _amountOfContent);
 					BookUtility.PutBoolInPreferences(this, _title + "Bool", audioBookCheckBox.Checked);
-					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, _numberOfPages - _initialNumberOfPages);
+					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, _amountOfContent - _initialAmountOfContent);
 				}
 
-				if (audioBookCheckBox.Checked)
-				{
-					intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, 0);
-				}
+				intent.PutExtra(BOOK_IS_AUDIO, audioBookCheckBox.Checked);
 			}
 
 			SetResult(Result.Ok, intent);
@@ -132,20 +134,17 @@ namespace BookList
 		{
 			var editText = FindViewById<EditText>(Resource.Id.EditTitle);
 			editText.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) => _title = e.Text.ToString();
+			var audioBookCheckBox = FindViewById<CheckBox>(Resource.Id.AudioBookCheckBox);
 			BookUtility.RemoveTitle(this, _title);
 
 			//To set the pages back to 0 when the title is removed.
-			BookUtility.PutNumberOfPagesInPreferences(this, _title, 0);
-			BookUtility.PutNumberOfPagesInPreferences(this, _initialTitle, 0);
+			BookUtility.PutContentOfBook(this, _title, 0);
+			BookUtility.PutContentOfBook(this, _initialTitle, 0);
 
 			var intent = new Intent();
 
-			var audioBookCheckBox = FindViewById<CheckBox>(Resource.Id.AudioBookCheckBox);
-
-			if (!audioBookCheckBox.Checked)
-				intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, 0 - _initialNumberOfPages);
-			else
-				intent.PutExtra(NUMBER_OF_PAGES_TO_ADD_OR_REMOVE, 0);
+			intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, 0 - _initialAmountOfContent);
+			intent.PutExtra(BOOK_IS_AUDIO, audioBookCheckBox.Checked);
 
 			SetResult(Result.Ok, intent);
 			Finish();
@@ -174,7 +173,7 @@ namespace BookList
 		public override void OnBackPressed()
 		{
 			base.OnBackPressed();
-			BookUtility.PutNumberOfPagesInPreferences(this, _title, _initialNumberOfPages);
+			BookUtility.PutContentOfBook(this, _title, _initialAmountOfContent);
 		}
 
 		private void SaveTitle() => BookUtility.SaveTitleToPreferences(this, _title);

@@ -83,7 +83,7 @@ namespace BookList
 
 		private static string[] ConvertStringToArray(string listOfTitles) => listOfTitles.Split(comma);
 
-		public static void PutNumberOfPagesInPreferences(Activity activity, string key, int number)
+		public static void PutContentOfBook(Activity activity, string key, int number)
 		{
 			var preferences = activity.GetSharedPreferences(preferences_file, PRIVATE_MODE);
 			var editor = preferences.Edit();
