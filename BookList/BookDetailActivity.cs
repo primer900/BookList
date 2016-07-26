@@ -16,6 +16,7 @@ namespace BookList
 		private const int EDIT_BOOK_ACTIVITY_RESULT = 2;
 		private const string CONTENT_TO_ADD_OR_REMOVE = "numberOfPagesToAddOrRemove";
 		private const string BOOK_IS_AUDIO = "bookIsAudio";
+		private const string AUDIO_BOOK_CHECK_ADD_ON = "Bool";
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -28,7 +29,7 @@ namespace BookList
 			_amountOfContent = BookUtility.GetPageNumberFromPreferences(this, _title, 0);
 			_initialAmountOfContent = _amountOfContent;
 
-			var isAudioBook = BookUtility.GetBoolInPreferences(this, _initialTitle + "Bool", false);
+			var isAudioBook = BookUtility.GetBoolInPreferences(this, _initialTitle + AUDIO_BOOK_CHECK_ADD_ON, false);
 			FindViewById<CheckBox>(Resource.Id.AudioBookCheckBox).Checked = isAudioBook;
 
 			InitializeEditTitleEditText();
@@ -93,27 +94,27 @@ namespace BookList
 				if (!TitleChange() && _amountOfContent == _initialAmountOfContent)
 				{
 					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, 0);
-					BookUtility.PutBoolInPreferences(this, _initialTitle + "Bool", audioBookCheckBox.Checked);
+					BookUtility.PutBoolInPreferences(this, _initialTitle + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
 				}
 
 				if (!TitleChange() && _initialAmountOfContent != _amountOfContent)
 				{
 					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, _amountOfContent - _initialAmountOfContent);
-					BookUtility.PutBoolInPreferences(this, _initialTitle + "Bool", audioBookCheckBox.Checked);
+					BookUtility.PutBoolInPreferences(this, _initialTitle + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
 				}
 
 				if (TitleChange() && _amountOfContent == _initialAmountOfContent)
 				{
 					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
 					BookUtility.PutContentOfBook(this, _title, _initialAmountOfContent);
-					BookUtility.PutBoolInPreferences(this, _title + "Bool", audioBookCheckBox.Checked);
+					BookUtility.PutBoolInPreferences(this, _title + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
 				}
 
 				if (TitleChange() && _amountOfContent != _initialAmountOfContent)
 				{
 					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
 					BookUtility.PutContentOfBook(this, _title, _amountOfContent);
-					BookUtility.PutBoolInPreferences(this, _title + "Bool", audioBookCheckBox.Checked);
+					BookUtility.PutBoolInPreferences(this, _title + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
 					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, _amountOfContent - _initialAmountOfContent);
 				}
 
@@ -155,7 +156,7 @@ namespace BookList
 			var audioBookCheckBox = FindViewById<CheckBox>(Resource.Id.AudioBookCheckBox);
 			audioBookCheckBox.Click += delegate 
 			{
-				var audioBookKey = TitleChange() ? _title + "Bool" : _initialTitle + "Bool";
+				var audioBookKey = TitleChange() ? _title + AUDIO_BOOK_CHECK_ADD_ON : _initialTitle + AUDIO_BOOK_CHECK_ADD_ON;
 				if (audioBookCheckBox.Checked)
 				{
 					FindViewById<EditText>(Resource.Id.NumberOfPages).Hint = "How many hours did you listen?";
