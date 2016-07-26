@@ -48,6 +48,9 @@ namespace BookList
 
 			UpdateData();
 
+			FindViewById<TextView>(Resource.Id.totalPages).Text = $"You have read {BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0)} pages";
+			FindViewById<TextView>(Resource.Id.totalHours).Text = $"You have listened for {BookUtility.GetPageNumberFromPreferences(this, TOTAL_HOURS_MAIN, 0)} hours";
+
 			InitializeAddBookButton();
 		}
 
@@ -95,7 +98,7 @@ namespace BookList
 			var newTotalPagesRead = oldTotalPagesRead + _contentToAddOrRemove;
 			BookUtility.PutContentOfBook(this, TOTAL_PAGES_MAIN, newTotalPagesRead);
 
-			totalPagesTextView.Text = "You have read " + BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0) + " pages";
+			totalPagesTextView.Text = $"You have read {BookUtility.GetPageNumberFromPreferences(this, TOTAL_PAGES_MAIN, 0)} pages";
 			_contentToAddOrRemove = 0;
 		}
 
@@ -107,7 +110,7 @@ namespace BookList
 			var newTotalHoursListened = oldTotalHoursListened + _contentToAddOrRemove;
 			BookUtility.PutContentOfBook(this, TOTAL_HOURS_MAIN, newTotalHoursListened);
 
-			totalHoursTextView.Text = "You have listened for " + BookUtility.GetPageNumberFromPreferences(this, TOTAL_HOURS_MAIN, 0) + " hours";
+			totalHoursTextView.Text = $"You have listened for {BookUtility.GetPageNumberFromPreferences(this, TOTAL_HOURS_MAIN, 0)} hours";
 			_contentToAddOrRemove = 0;
 		}
 	}
