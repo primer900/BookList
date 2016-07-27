@@ -140,8 +140,19 @@ namespace BookList
 			BookUtility.RemoveTitle(this, _title);
 
 			//To set the pages back to 0 when the title is removed.
-			BookUtility.PutContentOfBook(this, _title, 0);
-			BookUtility.PutContentOfBook(this, _initialTitle, 0);
+			if (TitleChange())
+			{
+				BookUtility.PutContentOfBook(this, _title, 0);
+				BookUtility.PutBoolInPreferences(this, _title + AUDIO_BOOK_CHECK_ADD_ON, false);
+				BookUtility.PutRatingInPreferences(this, $"RatingFor{_title}", 0);
+			}
+
+			else if (!TitleChange())
+			{
+				BookUtility.PutContentOfBook(this, _initialTitle, 0);
+				BookUtility.PutBoolInPreferences(this, _initialTitle + AUDIO_BOOK_CHECK_ADD_ON, false);
+				BookUtility.PutRatingInPreferences(this, $"RatingFor{_initialTitle}", 0);
+			}
 
 			var intent = new Intent();
 
