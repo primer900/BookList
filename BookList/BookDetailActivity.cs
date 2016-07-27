@@ -139,20 +139,12 @@ namespace BookList
 			var audioBookCheckBox = FindViewById<CheckBox>(Resource.Id.AudioBookCheckBox);
 			BookUtility.RemoveTitle(this, _title);
 
-			//To set the pages back to 0 when the title is removed.
-			if (TitleChange())
-			{
-				BookUtility.PutContentOfBook(this, _title, 0);
-				BookUtility.PutBoolInPreferences(this, _title + AUDIO_BOOK_CHECK_ADD_ON, false);
-				BookUtility.PutRatingInPreferences(this, $"RatingFor{_title}", 0);
-			}
+			var titleKey = TitleChange() ? _title : _initialTitle;
 
-			else if (!TitleChange())
-			{
-				BookUtility.PutContentOfBook(this, _initialTitle, 0);
-				BookUtility.PutBoolInPreferences(this, _initialTitle + AUDIO_BOOK_CHECK_ADD_ON, false);
-				BookUtility.PutRatingInPreferences(this, $"RatingFor{_initialTitle}", 0);
-			}
+			//To set the pages back to 0 when the title is removed.
+			BookUtility.PutContentOfBook(this, titleKey, 0);
+			BookUtility.PutBoolInPreferences(this, titleKey + AUDIO_BOOK_CHECK_ADD_ON, false);
+			BookUtility.PutRatingInPreferences(this, $"RatingFor{titleKey}", 0);
 
 			var intent = new Intent();
 
@@ -169,12 +161,12 @@ namespace BookList
 			audioBookCheckBox.Click += delegate 
 			{
 				var audioBookKey = TitleChange() ? _title + AUDIO_BOOK_CHECK_ADD_ON : _initialTitle + AUDIO_BOOK_CHECK_ADD_ON;
+
 				if (audioBookCheckBox.Checked)
 				{
 					FindViewById<EditText>(Resource.Id.NumberOfPages).Hint = "How many hours did you listen?";
 					BookUtility.PutBoolInPreferences(this, audioBookKey , true);
 				}
-
 				else
 				{
 					FindViewById<EditText>(Resource.Id.NumberOfPages).Hint = "How many pages did you read?";
@@ -190,7 +182,7 @@ namespace BookList
 
 			ratingBar.RatingBarChange += (o, e) =>
 			{
-				Toast.MakeText(this, "New Rating: " + ratingBar.Rating, ToastLength.Short).Show();
+				Toast.MakeText(this, $"New Rating: {ratingBar.Rating}", ToastLength.Short).Show();
 			};
 		}
 

@@ -2,7 +2,6 @@
 using Android.Content;
 using System.Linq;
 
-
 namespace BookList
 {
 	public static class BookUtility
