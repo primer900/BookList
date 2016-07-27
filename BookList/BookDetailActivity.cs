@@ -94,42 +94,36 @@ namespace BookList
 
 			if (_title != null)
 			{
-				if (!TitleChange() && _amountOfContent == _initialAmountOfContent)
-				{
-					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, 0);
-					BookUtility.PutBoolInPreferences(this, _initialTitle + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
-					BookUtility.PutRatingInPreferences(this, $"RatingFor{_initialTitle}", (int) rating.Rating);
-				}
+				PutValuesInPreferences(audioBookCheckBox, rating);
 
-				if (!TitleChange() && _initialAmountOfContent != _amountOfContent)
-				{
-					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, _amountOfContent - _initialAmountOfContent);
-					BookUtility.PutBoolInPreferences(this, _initialTitle + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
-					BookUtility.PutRatingInPreferences(this, $"RatingFor{_initialTitle}", (int)rating.Rating);
-				}
-
-				if (TitleChange() && _amountOfContent == _initialAmountOfContent)
-				{
-					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
-					BookUtility.PutContentOfBook(this, _title, _initialAmountOfContent);
-					BookUtility.PutBoolInPreferences(this, _title + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
-					BookUtility.PutRatingInPreferences(this, $"RatingFor{_title}", (int)rating.Rating);
-				}
-
-				if (TitleChange() && _amountOfContent != _initialAmountOfContent)
-				{
-					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
-					BookUtility.PutContentOfBook(this, _title, _amountOfContent);
-					BookUtility.PutBoolInPreferences(this, _title + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
-					BookUtility.PutRatingInPreferences(this, $"RatingFor{_title}", (int)rating.Rating);
-					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, _amountOfContent - _initialAmountOfContent);
-				}
-
+				intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, _amountOfContent - _initialAmountOfContent);
 				intent.PutExtra(BOOK_IS_AUDIO, audioBookCheckBox.Checked);
 			}
 
 			SetResult(Result.Ok, intent);
 			Finish();
+		}
+
+		private void PutValuesInPreferences(CheckBox audioBookCheckBox, RatingBar rating)
+		{
+			if (!TitleChange())
+			{
+				BookUtility.PutBoolInPreferences(this, _initialTitle + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
+				BookUtility.PutRatingInPreferences(this, $"RatingFor{_initialTitle}", (int)rating.Rating);
+			}
+
+			if (TitleChange())
+			{
+				BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
+				BookUtility.PutBoolInPreferences(this, _title + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
+				BookUtility.PutRatingInPreferences(this, $"RatingFor{_title}", (int)rating.Rating);
+
+				if (_amountOfContent == _initialAmountOfContent)
+					BookUtility.PutContentOfBook(this, _title, _initialAmountOfContent);
+
+				else if (_amountOfContent != _initialAmountOfContent)
+					BookUtility.PutContentOfBook(this, _title, _amountOfContent);
+			}
 		}
 
 		private void InitializeDeleteButton()
@@ -185,7 +179,7 @@ namespace BookList
 
 			ratingBar.RatingBarChange += (o, e) =>
 			{
-				Toast.MakeText(this, "New Rating: " + ratingBar.Rating.ToString(), ToastLength.Short).Show();
+				Toast.MakeText(this, "New Rating: " + ratingBar.Rating, ToastLength.Short).Show();
 			};
 		}
 
