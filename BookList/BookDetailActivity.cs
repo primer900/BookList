@@ -26,6 +26,7 @@ namespace BookList
 
 			_title = Intent.GetStringExtra(BookUtility.titleOfItemClicked);
 			_initialTitle = _title;
+
 			_amountOfContent = BookUtility.GetPageNumberFromPreferences(this, _title, 0);
 			_initialAmountOfContent = _amountOfContent;
 
@@ -37,6 +38,7 @@ namespace BookList
 			InitializeDoneEditingButton();
 			InitializeDeleteButton();
 			InitializeAudioBookCheckBox();
+			InitializeRatingBar();
 		}
 
 		private void InitializeEditTitleEditText()
@@ -88,6 +90,7 @@ namespace BookList
 		{
 			var intent = new Intent();
 			var audioBookCheckBox = FindViewById<CheckBox>(Resource.Id.AudioBookCheckBox);
+			var rating = FindViewById<RatingBar>(Resource.Id.ratingbar);
 
 			if (_title != null)
 			{
@@ -95,12 +98,14 @@ namespace BookList
 				{
 					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, 0);
 					BookUtility.PutBoolInPreferences(this, _initialTitle + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
+					BookUtility.PutRatingInPreferences(this, $"RatingFor{_initialTitle}", (int) rating.Rating);
 				}
 
 				if (!TitleChange() && _initialAmountOfContent != _amountOfContent)
 				{
 					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, _amountOfContent - _initialAmountOfContent);
 					BookUtility.PutBoolInPreferences(this, _initialTitle + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
+					BookUtility.PutRatingInPreferences(this, $"RatingFor{_initialTitle}", (int)rating.Rating);
 				}
 
 				if (TitleChange() && _amountOfContent == _initialAmountOfContent)
@@ -108,6 +113,7 @@ namespace BookList
 					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
 					BookUtility.PutContentOfBook(this, _title, _initialAmountOfContent);
 					BookUtility.PutBoolInPreferences(this, _title + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
+					BookUtility.PutRatingInPreferences(this, $"RatingFor{_title}", (int)rating.Rating);
 				}
 
 				if (TitleChange() && _amountOfContent != _initialAmountOfContent)
@@ -115,6 +121,7 @@ namespace BookList
 					BookUtility.EditTitleInPreferences(this, _initialTitle, _title);
 					BookUtility.PutContentOfBook(this, _title, _amountOfContent);
 					BookUtility.PutBoolInPreferences(this, _title + AUDIO_BOOK_CHECK_ADD_ON, audioBookCheckBox.Checked);
+					BookUtility.PutRatingInPreferences(this, $"RatingFor{_title}", (int)rating.Rating);
 					intent.PutExtra(CONTENT_TO_ADD_OR_REMOVE, _amountOfContent - _initialAmountOfContent);
 				}
 
@@ -168,6 +175,17 @@ namespace BookList
 					FindViewById<EditText>(Resource.Id.NumberOfPages).Hint = "How many pages did you read?";
 					BookUtility.PutBoolInPreferences(this, audioBookKey, false);
 				}
+			};
+		}
+
+		private void InitializeRatingBar()
+		{
+			var ratingBar = FindViewById<RatingBar>(Resource.Id.ratingbar);
+			ratingBar.Rating = BookUtility.GetRatingInPreferences(this, $"RatingFor{_initialTitle}", 0);
+
+			ratingBar.RatingBarChange += (o, e) =>
+			{
+				Toast.MakeText(this, "New Rating: " + ratingBar.Rating.ToString(), ToastLength.Short).Show();
 			};
 		}
 

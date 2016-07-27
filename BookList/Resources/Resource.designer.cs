@@ -66,8 +66,8 @@ namespace BookList
 			// aapt resource value: 0x7f060004
 			public const int AudioBookCheckBox = 2131099652;
 			
-			// aapt resource value: 0x7f060005
-			public const int Delete = 2131099653;
+			// aapt resource value: 0x7f060006
+			public const int Delete = 2131099654;
 			
 			// aapt resource value: 0x7f060002
 			public const int EditTitle = 2131099650;
@@ -78,17 +78,20 @@ namespace BookList
 			// aapt resource value: 0x7f060003
 			public const int NumberOfPages = 2131099651;
 			
-			// aapt resource value: 0x7f060006
-			public const int addBook = 2131099654;
-			
 			// aapt resource value: 0x7f060007
-			public const int bookList = 2131099655;
-			
-			// aapt resource value: 0x7f060009
-			public const int totalHours = 2131099657;
+			public const int addBook = 2131099655;
 			
 			// aapt resource value: 0x7f060008
-			public const int totalPages = 2131099656;
+			public const int bookList = 2131099656;
+			
+			// aapt resource value: 0x7f060005
+			public const int ratingbar = 2131099653;
+			
+			// aapt resource value: 0x7f06000a
+			public const int totalHours = 2131099658;
+			
+			// aapt resource value: 0x7f060009
+			public const int totalPages = 2131099657;
 			
 			static Id()
 			{

@@ -7,7 +7,6 @@ namespace BookList
 {
 	public static class BookUtility
 	{
-
 		private const string PREFERENCES_FILE = "StorageFile";
 		private const string KEY_FOR_TITLES = "title";
 		private const string KEY_FOR_TOTAL_PAGES = "TotalPages";
@@ -104,6 +103,21 @@ namespace BookList
 			var preferences = activity.GetSharedPreferences(PREFERENCES_FILE, PRIVATE_MODE);
 			var isAudioBook = preferences.GetBoolean(key, defaultValue);
 			return isAudioBook;
+		}
+
+		public static void PutRatingInPreferences(Activity activity, string key, int rating)
+		{
+			var preferences = activity.GetSharedPreferences(PREFERENCES_FILE, PRIVATE_MODE);
+			var editor = preferences.Edit();
+			editor.PutInt(key, rating);
+			editor.Commit();
+		}
+
+		public static int GetRatingInPreferences(Activity activity, string key, int defaultValue)
+		{
+			var preferences = activity.GetSharedPreferences(PREFERENCES_FILE, PRIVATE_MODE);
+			var rating = preferences.GetInt(key, defaultValue);
+			return rating;
 		}
 	}
 }
