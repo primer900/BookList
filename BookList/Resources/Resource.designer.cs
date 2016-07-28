@@ -147,29 +147,26 @@ namespace BookList
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f050004
-			public const int AddPage = 2131034116;
-			
-			// aapt resource value: 0x7f050007
-			public const int Delete = 2131034119;
+			// aapt resource value: 0x7f050003
+			public const int AddPage = 2131034115;
 			
 			// aapt resource value: 0x7f050006
-			public const int FinishEdit = 2131034118;
-			
-			// aapt resource value: 0x7f050002
-			public const int add_page = 2131034114;
-			
-			// aapt resource value: 0x7f050003
-			public const int add_page_greeting = 2131034115;
-			
-			// aapt resource value: 0x7f050001
-			public const int app_name = 2131034113;
-			
-			// aapt resource value: 0x7f050000
-			public const int hello = 2131034112;
+			public const int Delete = 2131034118;
 			
 			// aapt resource value: 0x7f050005
-			public const int titleHint = 2131034117;
+			public const int FinishEdit = 2131034117;
+			
+			// aapt resource value: 0x7f050001
+			public const int add_page = 2131034113;
+			
+			// aapt resource value: 0x7f050002
+			public const int add_page_greeting = 2131034114;
+			
+			// aapt resource value: 0x7f050000
+			public const int app_name = 2131034112;
+			
+			// aapt resource value: 0x7f050004
+			public const int titleHint = 2131034116;
 			
 			static String()
 			{

@@ -81,6 +81,7 @@ namespace BookList
 			adapter.Clear();
 			if (titlesToBeAdded != null)
 				titlesToBeAdded
+					.Where(title => title != "")
 					.ToList()
 					.ForEach(title => adapter.Insert(title, TOP_OF_LIST));
 
