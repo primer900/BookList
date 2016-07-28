@@ -6,6 +6,6 @@
 	<string name="add_page_greeting">Add title here</string>
 	<string name="AddPage">Add Book</string>
 	<string name="titleHint">Title</string>
-	<string name="FinishEdit">Done Editing</string>
+	<string name="FinishEdit">Save</string>
 	<string name="Delete">Delete</string>
 </resources>

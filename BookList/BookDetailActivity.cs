@@ -137,14 +137,12 @@ namespace BookList
 			var editText = FindViewById<EditText>(Resource.Id.EditTitle);
 			editText.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) => _title = e.Text.ToString();
 			var audioBookCheckBox = FindViewById<CheckBox>(Resource.Id.AudioBookCheckBox);
-			BookUtility.RemoveTitle(this, _title);
-
-			var titleKey = TitleChange() ? _title : _initialTitle;
 
 			//To set the pages back to 0 when the title is removed.
-			BookUtility.PutContentOfBook(this, titleKey, 0);
-			BookUtility.PutBoolInPreferences(this, titleKey + AUDIO_BOOK_CHECK_ADD_ON, false);
-			BookUtility.PutRatingInPreferences(this, $"RatingFor{titleKey}", 0);
+			BookUtility.PutContentOfBook(this, _initialTitle, 0);
+			BookUtility.PutBoolInPreferences(this, _initialTitle + AUDIO_BOOK_CHECK_ADD_ON, false);
+			BookUtility.PutRatingInPreferences(this, $"RatingFor{_initialTitle}", 0);
+			BookUtility.RemoveTitle(this, _initialTitle);
 
 			var intent = new Intent();
 
